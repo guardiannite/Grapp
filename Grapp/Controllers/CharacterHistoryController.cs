@@ -45,6 +45,7 @@ namespace Grapp.Controllers
 
                 model.Highscores = db.QueryLatestHighscore(playerName, out date);
 
+                //TODO: On first highscore entries, the previousHighscores.Count is zero, that means the page won't display, since it picks the Math.Min(current.Count, past.Count)
                 var skillIncreases = new List<Skill>();
 
                 for (int i = 0; i < previousHighscores.Count; i++ )

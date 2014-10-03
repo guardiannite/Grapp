@@ -3,6 +3,19 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<form class="form-horizontal" role="form" action="">
+    <div class="form-group">
+        <label for="inputPlayerName" class="col-sm-2 control-label">Search for a player:</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" id="inputPlayerName" name="playerName" placeholder="Player name">
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <button type="submit" class="btn btn-default">Search</button>
+        </div>
+    </div>
+</form>
 <table class="table">
     <tr>
         <th>Skill</th>
