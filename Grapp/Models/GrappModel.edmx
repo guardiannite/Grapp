@@ -1,0 +1,258 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="GrappModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Highscore">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="PlayerId" Type="int" Nullable="false" />
+          <Property Name="Date" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Player">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nchar" MaxLength="25" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Skill">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="HighscoreId" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Level" Type="int" />
+          <Property Name="Experience" Type="int" />
+          <Property Name="Rank" Type="int" />
+        </EntityType>
+        <EntityType Name="SkillEnum">
+          <Key>
+            <PropertyRef Name="Name" />
+          </Key>
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="OrderIndex" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_HighscoreHistory_Player">
+          <End Role="Player" Type="Self.Player" Multiplicity="1" />
+          <End Role="Highscore" Type="Self.Highscore" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Player">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Highscore">
+              <PropertyRef Name="PlayerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Skill_Highscore">
+          <End Role="Highscore" Type="Self.Highscore" Multiplicity="1" />
+          <End Role="Skill" Type="Self.Skill" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Highscore">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Skill">
+              <PropertyRef Name="HighscoreId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Skill_SkillEnum">
+          <End Role="SkillEnum" Type="Self.SkillEnum" Multiplicity="1" />
+          <End Role="Skill" Type="Self.Skill" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SkillEnum">
+              <PropertyRef Name="Name" />
+            </Principal>
+            <Dependent Role="Skill">
+              <PropertyRef Name="Name" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="GrappModelStoreContainer">
+          <EntitySet Name="Highscore" EntityType="Self.Highscore" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Player" EntityType="Self.Player" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Skill" EntityType="Self.Skill" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SkillEnum" EntityType="Self.SkillEnum" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_HighscoreHistory_Player" Association="Self.FK_HighscoreHistory_Player">
+            <End Role="Player" EntitySet="Player" />
+            <End Role="Highscore" EntitySet="Highscore" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Skill_Highscore" Association="Self.FK_Skill_Highscore">
+            <End Role="Highscore" EntitySet="Highscore" />
+            <End Role="Skill" EntitySet="Skill" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Skill_SkillEnum" Association="Self.FK_Skill_SkillEnum">
+            <End Role="SkillEnum" EntitySet="SkillEnum" />
+            <End Role="Skill" EntitySet="Skill" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="GrappModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="GrappEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Highscores" EntityType="GrappModel.Highscore" />
+          <EntitySet Name="Players" EntityType="GrappModel.Player" />
+          <EntitySet Name="Skills" EntityType="GrappModel.Skill" />
+          <EntitySet Name="SkillEnums" EntityType="GrappModel.SkillEnum" />
+          <AssociationSet Name="FK_HighscoreHistory_Player" Association="GrappModel.FK_HighscoreHistory_Player">
+            <End Role="Player" EntitySet="Players" />
+            <End Role="Highscore" EntitySet="Highscores" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Skill_Highscore" Association="GrappModel.FK_Skill_Highscore">
+            <End Role="Highscore" EntitySet="Highscores" />
+            <End Role="Skill" EntitySet="Skills" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Skill_SkillEnum" Association="GrappModel.FK_Skill_SkillEnum">
+            <End Role="SkillEnum" EntitySet="SkillEnums" />
+            <End Role="Skill" EntitySet="Skills" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Highscore">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PlayerId" Type="Int32" Nullable="false" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Player" Relationship="GrappModel.FK_HighscoreHistory_Player" FromRole="Highscore" ToRole="Player" />
+          <NavigationProperty Name="Skills" Relationship="GrappModel.FK_Skill_Highscore" FromRole="Highscore" ToRole="Skill" />
+        </EntityType>
+        <EntityType Name="Player">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="25" FixedLength="true" Unicode="true" />
+          <NavigationProperty Name="Highscores" Relationship="GrappModel.FK_HighscoreHistory_Player" FromRole="Player" ToRole="Highscore" />
+        </EntityType>
+        <EntityType Name="Skill">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="HighscoreId" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Level" Type="Int32" />
+          <Property Name="Experience" Type="Int32" />
+          <Property Name="Rank" Type="Int32" />
+          <NavigationProperty Name="Highscore" Relationship="GrappModel.FK_Skill_Highscore" FromRole="Skill" ToRole="Highscore" />
+          <NavigationProperty Name="SkillEnum" Relationship="GrappModel.FK_Skill_SkillEnum" FromRole="Skill" ToRole="SkillEnum" />
+        </EntityType>
+        <EntityType Name="SkillEnum">
+          <Key>
+            <PropertyRef Name="Name" />
+          </Key>
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="OrderIndex" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Skills" Relationship="GrappModel.FK_Skill_SkillEnum" FromRole="SkillEnum" ToRole="Skill" />
+        </EntityType>
+        <Association Name="FK_HighscoreHistory_Player">
+          <End Type="GrappModel.Player" Role="Player" Multiplicity="1" />
+          <End Type="GrappModel.Highscore" Role="Highscore" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Player">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Highscore">
+              <PropertyRef Name="PlayerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Skill_Highscore">
+          <End Type="GrappModel.Highscore" Role="Highscore" Multiplicity="1" />
+          <End Type="GrappModel.Skill" Role="Skill" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Highscore">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Skill">
+              <PropertyRef Name="HighscoreId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Skill_SkillEnum">
+          <End Type="GrappModel.SkillEnum" Role="SkillEnum" Multiplicity="1" />
+          <End Type="GrappModel.Skill" Role="Skill" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SkillEnum">
+              <PropertyRef Name="Name" />
+            </Principal>
+            <Dependent Role="Skill">
+              <PropertyRef Name="Name" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="GrappModelStoreContainer" CdmEntityContainer="GrappEntities">
+          <EntitySetMapping Name="Highscores">
+            <EntityTypeMapping TypeName="GrappModel.Highscore">
+              <MappingFragment StoreEntitySet="Highscore">
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="PlayerId" ColumnName="PlayerId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Players">
+            <EntityTypeMapping TypeName="GrappModel.Player">
+              <MappingFragment StoreEntitySet="Player">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Skills">
+            <EntityTypeMapping TypeName="GrappModel.Skill">
+              <MappingFragment StoreEntitySet="Skill">
+                <ScalarProperty Name="Rank" ColumnName="Rank" />
+                <ScalarProperty Name="Experience" ColumnName="Experience" />
+                <ScalarProperty Name="Level" ColumnName="Level" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="HighscoreId" ColumnName="HighscoreId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SkillEnums">
+            <EntityTypeMapping TypeName="GrappModel.SkillEnum">
+              <MappingFragment StoreEntitySet="SkillEnum">
+                <ScalarProperty Name="OrderIndex" ColumnName="OrderIndex" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

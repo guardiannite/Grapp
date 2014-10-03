@@ -43,6 +43,8 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -167,10 +169,37 @@
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\CharacterHistoryModel.cs" />
+    <Compile Include="Models\GrappDatabase.cs" />
+    <Compile Include="Models\GrappModel.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>GrappModel.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GrappModel.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>GrappModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GrappModel.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>GrappModel.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Highscore.cs">
+      <DependentUpon>GrappModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\HighscoreParser.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
-    <Compile Include="Models\Skill.cs" />
+    <Compile Include="Models\Player.cs">
+      <DependentUpon>GrappModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Skill.cs">
+      <DependentUpon>GrappModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SkillEnum.cs">
+      <DependentUpon>GrappModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -183,6 +212,23 @@
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <EntityDeploy Include="Models\GrappModel.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>GrappModel.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Models\GrappModel.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>GrappModel.edmx</DependentUpon>
+      <LastGenOutput>GrappModel.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Models\GrappModel.edmx.diagram">
+      <DependentUpon>GrappModel.edmx</DependentUpon>
+    </Content>
+    <Content Include="Models\GrappModel.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>GrappModel.edmx</DependentUpon>
+      <LastGenOutput>GrappModel.cs</LastGenOutput>
+    </Content>
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -244,6 +290,9 @@
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="packages.config" />
     <None Include="Project_Readme.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

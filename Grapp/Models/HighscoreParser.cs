@@ -10,18 +10,25 @@ namespace Grapp.Models
     /// </summary>
     public class HighscoreParser
     {
-        public static List<Skill> GetSkills(string serializedString)
+        public static List<DeserializedData> GetSkills(string serializedString)
         {
-            var retVal = new List<Skill>();
+            int skillCount = -1;
+            //Ask the database how many skills there are (could extract this to a different location)
+            using (var context = new GrappEntities())
+            {
+                skillCount = context.SkillEnums.Count();
+            }
+
+            var retVal = new List<DeserializedData>();
             var lines = serializedString.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
 
-            if(lines.Length < Skill.SkillNames.Length)
+            if (lines.Length < skillCount)
             {
-                throw new ArgumentException(String.Format("Expecting to parse at least ({0}) lines of highscore string, but only received ({1})", Skill.SkillNames.Length, lines.Length));
+                throw new ArgumentException(String.Format("Expecting to parse at least ({0}) lines of highscore string, but only received ({1})", skillCount, lines.Length));
             }
 
             //Highscore for each skill
-            for (int i = 0; i < Skill.SkillNames.Length; i++ )
+            for (int i = 0; i < skillCount; i++)
             {
                 var skillHighscoreInfo = lines[i].Split(',');
                 if(skillHighscoreInfo.Length != 3)
@@ -40,15 +47,22 @@ namespace Grapp.Models
                     }
                 }
 
-                retVal.Add(new Skill()
+                retVal.Add(new DeserializedData()
                 {
-                    Name = Skill.SkillNames[i],
+                    Rank = highscoreValues[0],
                     Level = highscoreValues[1],
                     Experience = highscoreValues[2],
                 });
             }
 
             return retVal;
+        }
+
+        public class DeserializedData
+        {
+            public int Rank { get; set; }
+            public int Level { get; set; }
+            public int Experience { get; set; }
         }
     }
 }

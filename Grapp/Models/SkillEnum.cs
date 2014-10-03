@@ -12,16 +12,16 @@ namespace Grapp.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class Skill
+    public partial class SkillEnum
     {
-        public int Id { get; set; }
-        public int HighscoreId { get; set; }
-        public string Name { get; set; }
-        public Nullable<int> Level { get; set; }
-        public Nullable<int> Experience { get; set; }
-        public Nullable<int> Rank { get; set; }
+        public SkillEnum()
+        {
+            this.Skills = new HashSet<Skill>();
+        }
     
-        public virtual Highscore Highscore { get; set; }
-        public virtual SkillEnum SkillEnum { get; set; }
+        public string Name { get; set; }
+        public int OrderIndex { get; set; }
+    
+        public virtual ICollection<Skill> Skills { get; set; }
     }
 }

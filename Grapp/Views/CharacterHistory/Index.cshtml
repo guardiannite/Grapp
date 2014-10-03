@@ -9,12 +9,12 @@
         <th>Level</th>
         <th>Experience</th>
     </tr>
-    @foreach (var skill in Model.Skills)
+    @foreach (var skill in Model.Highscores)
     {
         <tr>
             <td>@skill.Name</td>
-            <td>@skill.Level.ToString("#,##0")</td>
-            <td>@skill.Experience.ToString("#,##0")</td>
+            <td>@(skill.Level.HasValue ? skill.Level.Value.ToString("#,##0") : "")</td>
+            <td>@(skill.Experience.HasValue ? skill.Experience.Value.ToString("#,##0") : "")</td>
         </tr>
     }
 </table>

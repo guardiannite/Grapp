@@ -7,11 +7,11 @@ namespace Grapp.Models
 {
     public class CharacterHistoryModel
     {
-        public List<Skill> Skills { get; set; }
+        public List<Skill> Highscores { get; set; }
 
         public CharacterHistoryModel()
         {
-            Skills = new List<Skill>();
+            Highscores = new List<Skill>();
         }
     }
 }

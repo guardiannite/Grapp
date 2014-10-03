@@ -19,7 +19,13 @@ namespace Grapp.Controllers
     
             if (playerName != null)
             {
-                model.Skills = HighscoreParser.GetSkills(RequestHighscore(playerName));
+                var serializedData = RequestHighscore(playerName);
+                var data = HighscoreParser.GetSkills(serializedData);
+                GrappDatabase db = new GrappDatabase();
+                db.InsertHighscore(data, playerName);
+
+                DateTime date;
+                model.Highscores = db.QueryLatestHighscore(playerName, out date) ;
             }
             return View(model);
         }
