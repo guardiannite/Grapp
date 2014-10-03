@@ -9,12 +9,14 @@
         <th>Level</th>
         <th>Experience</th>
     </tr>
-    @foreach (var skill in Model.Highscores)
+    @for(int i = 0; i < Math.Min(Model.Highscores.Count, Model.SkillIncrease.Count); i++)
     {
-        <tr>
+        var skill = Model.Highscores.ElementAt(i);
+        var difference = Model.SkillIncrease.ElementAt(i);
+        <tr class="@(@difference.Experience > 0 ? "success" : "")">
             <td>@skill.Name</td>
-            <td>@(skill.Level.HasValue ? skill.Level.Value.ToString("#,##0") : "")</td>
-            <td>@(skill.Experience.HasValue ? skill.Experience.Value.ToString("#,##0") : "")</td>
+            <td>@(skill.Level.HasValue ? skill.Level.Value.ToString("#,##0") : "")           (+@(difference.Level.HasValue ? difference.Level.Value.ToString("#,##0") : ""))</td>
+            <td>@(skill.Experience.HasValue ? skill.Experience.Value.ToString("#,##0") : "")           (+@(difference.Experience.HasValue ? difference.Experience.Value.ToString("#,##0") : ""))</td>
         </tr>
     }
 </table>

@@ -22,10 +22,43 @@ namespace Grapp.Controllers
                 var serializedData = RequestHighscore(playerName);
                 var data = HighscoreParser.GetSkills(serializedData);
                 GrappDatabase db = new GrappDatabase();
-                db.InsertHighscore(data, playerName);
-
                 DateTime date;
-                model.Highscores = db.QueryLatestHighscore(playerName, out date) ;
+                var previousHighscores = db.QueryLatestHighscore(playerName, out date);
+
+                //for right now, we only want to insert into the player doesn't have a highscore entry from the past day
+                if (date < DateTime.Now.ToUniversalTime().AddDays(-1))
+                {
+                    db.InsertHighscore(data, playerName);
+                }
+                else
+                {
+                    //Otherwise, we check to see if any skills' experience has changed since the last db write
+                    for(int i = 0; i < previousHighscores.Count; i++)
+                    {
+                        if(data.ElementAt(i).Experience != previousHighscores.ElementAt(i).Experience)
+                        {
+                            db.InsertHighscore(data, playerName);
+                            break;
+                        }
+                    }
+                }
+
+                model.Highscores = db.QueryLatestHighscore(playerName, out date);
+
+                var skillIncreases = new List<Skill>();
+
+                for (int i = 0; i < previousHighscores.Count; i++ )
+                {
+                    var skill = new Skill();
+                    skill.Level = model.Highscores.ElementAt(i).Level - previousHighscores.ElementAt(i).Level;
+                    skill.Name = previousHighscores.ElementAt(i).Name;
+                    skill.Rank = model.Highscores.ElementAt(i).Rank - previousHighscores.ElementAt(i).Rank;
+                    skill.Experience = model.Highscores.ElementAt(i).Experience - previousHighscores.ElementAt(i).Experience;
+
+                    skillIncreases.Add(skill);
+                }
+
+                model.SkillIncrease = skillIncreases;
             }
             return View(model);
         }
