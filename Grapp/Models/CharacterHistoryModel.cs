@@ -9,6 +9,8 @@ namespace Grapp.Models
     {
         public List<Skill> Highscores { get; set; }
         public List<Skill> SkillIncrease { get; set; }
+        public DateTime LastUpdate { get; set; }
+        public DateTime CurrentUpdate { get; set; }
 
         public CharacterHistoryModel()
         {

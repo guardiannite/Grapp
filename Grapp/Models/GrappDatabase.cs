@@ -1,104 +1,85 @@
-﻿using System;
+﻿using Grapp.Models.Entity;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 
 namespace Grapp.Models
 {
     public class GrappDatabase
     {
-        public int SkillCount { get; private set;}
-
-        public GrappDatabase()
+        /// <summary>
+        /// Gets the most recent highscore of a player, otherwise null
+        /// </summary>
+        public static List<Skill> LatestHighscoreQuery(string playerName, out DateTime? highscoreDate)
         {
-            using(var context = new GrappEntities())
+            highscoreDate = null;
+            using(var db = new GrappContext())
             {
-                SkillCount = context.SkillEnums.Count();
-            }
-        }
-        
-        public List<Skill> QueryLatestHighscore(string playerName, out DateTime highscoreDate)
-        {
-            highscoreDate = new DateTime(2000, 1, 1);
-            using(var context = new GrappEntities())
-            {
-//                string query = @"select h2.Id
-//from Player p2
-//inner join Highscore h2 on h2.PlayerId = p2.Id
-//where h2.Date = (select MAX(h.Date)
-//				from Player p
-//				inner join Highscore h on h.PlayerId = p.Id
-//				where p.Id = h2.PlayerId) 
-//and p2.Name = @playerName";
-//                var highscoreId = context.Database.SqlQuery<int>(query, new SqlParameter("@playerName", playerName));
-
-//                if(highscoreId == null)
-//                {
-//                    return new List<Skill>();
-//                }
-
-//                return context.Skills.Where<Skill>(s => s.HighscoreId == highscoreId.First()).ToList<Skill>();
-                var player = context.Players.Where<Player>(p => p.Name == playerName).FirstOrDefault();
+                var player = db.Players.Where(p => p.Name == playerName).FirstOrDefault();
                 if(player == null)
                 {
                     //No Player, thus this person can't have any highscores
-                    return new List<Skill>();
+                    return null;
                 }
 
-                var highscore = context.Highscores.Where(h => h.PlayerId == player.Id).OrderBy(h => h.Date).AsEnumerable().LastOrDefault<Highscore>();
+                var highscore = player.Highscores.OrderBy(h => h.Date).LastOrDefault();
                 if(highscore == null)
                 {
                     //A player exists, but doesn't have any highscores
-                    return new List<Skill>();
+                    return null;
                 }
 
                 highscoreDate = highscore.Date;
 
-                var skills = context.Skills.Where(s => s.HighscoreId == highscore.Id).ToList<Skill>();
-                if(skills == null)
-                {
-                    //Someone probablly screwed around with the database and deleted skill entries, but forgot to remove the highscore entry
-                    return new List<Skill>();
-                }
-                return skills;
+                return highscore.Skills.Select(s => Skill.FromEntity(s)).ToList();
             }
         }
 
-        public void InsertHighscore(List<HighscoreParser.DeserializedData> skills, string playerName)
+        /// <summary>
+        /// Records a new highscore row for the player
+        /// </summary>
+        public static async Task InsertHighscoreAsync(List<Skill> skills, string playerName)
         {
-            if(skills.Count != SkillCount)
+            using(var context = new GrappContext())
             {
-                throw new ArgumentException(String.Format("Expecting ({0}) skills of highscore data, but received ({1})", SkillCount, skills.Count));
-            }
-            using(var context = new GrappEntities())
-            {
-                var player = context.Players.Where<Player>(p => p.Name == playerName).FirstOrDefault();
-
-                var highscoreEntry = new Highscore()
+                int skillCount = context.SkillEnums.Count();
+            
+                //Verify the number of skills passed in matches the database
+                if(skills.Count != skillCount)
                 {
-                    Player = player ?? new Player() { Name = playerName },
+                    throw new ArgumentException(String.Format("Expecting ({0}) skills of highscore data, but received ({1})", skillCount, skills.Count));
+                }
+
+                //Grab our player
+                var player = context.Players.Where(p => p.Name == playerName).FirstOrDefault();
+
+                //If player doesn't exist, create a new player
+                //Make the highscore set to UTC time
+                var highscoreEntry = new HighscoreEntity()
+                {
+                    Player = player ?? new PlayerEntity{ Name = playerName },
                     Date = DateTime.Now.ToUniversalTime(),
                 };
 
-                //a) You set the skill.Highscore property AND add it to the context 
-                //OR
-                //b) You set the highscoreEntry.Skills property equal to the collection
-                for(int i = 0; i < SkillCount; i++)
+                //Create a skill row for each skill
+                for(int i = 0; i < skillCount; i++)
                 {
-                    var skill = new Skill()
+                    var skill = new SkillEntity()
                     {
-                        Rank = skills[i].Rank,
+                        Rank = skills[i].HighscoreRank,
                         Experience = skills[i].Experience,
                         Level = skills[i].Level,
-                        Name = context.SkillEnums.Where<SkillEnum>(s=> s.OrderIndex == i).Select(se => se.Name).FirstOrDefault(),
+                        Name = context.SkillEnums.Where(s=> s.OrderIndex == (int)skills[i].SkillType).Select(se => se.Name).FirstOrDefault(),
                     };
 
                     highscoreEntry.Skills.Add(skill);
                 }
 
                 context.Highscores.Add(highscoreEntry);
-                context.SaveChanges();
+                await context.SaveChangesAsync();
             }
         }
     }

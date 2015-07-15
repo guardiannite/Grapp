@@ -16,6 +16,12 @@
         </div>
     </div>
 </form>
+<div class="col-md-6">
+    <p>
+        Last Update occurred on @Model.LastUpdate.ToLocalTime().ToShortDateString() @Model.LastUpdate.ToLocalTime().ToLongTimeString() <br/>
+        Most recent update occurred on @Model.CurrentUpdate.ToLocalTime().ToShortDateString() @Model.CurrentUpdate.ToLocalTime().ToLongTimeString()
+    </p>
+</div>
 <table class="table">
     <tr>
         <th>Skill</th>
@@ -27,9 +33,9 @@
         var skill = Model.Highscores.ElementAt(i);
         var difference = Model.SkillIncrease.ElementAt(i);
         <tr class="@(@difference.Experience > 0 ? "success" : "")">
-            <td>@skill.Name</td>
-            <td>@(skill.Level.HasValue ? skill.Level.Value.ToString("#,##0") : "")           (+@(difference.Level.HasValue ? difference.Level.Value.ToString("#,##0") : ""))</td>
-            <td>@(skill.Experience.HasValue ? skill.Experience.Value.ToString("#,##0") : "")           (+@(difference.Experience.HasValue ? difference.Experience.Value.ToString("#,##0") : ""))</td>
+            <td>@skill.SkillType.ToString("f")</td>
+            <td>@(skill.Level.ToString("#,##0"))           (+@(difference.Level.ToString("#,##0")))</td>
+            <td>@(skill.Experience.ToString("#,##0"))           (+@(difference.Experience.ToString("#,##0")))</td>
         </tr>
     }
 </table>

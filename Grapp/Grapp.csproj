@@ -43,6 +43,12 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http.Extensions">
+      <HintPath>..\packages\Microsoft.Net.Http.2.2.29\lib\net45\System.Net.Http.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.Primitives">
+      <HintPath>..\packages\Microsoft.Net.Http.2.2.29\lib\net45\System.Net.Http.Primitives.dll</HintPath>
+    </Reference>
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
     <Reference Include="System.Web.DynamicData" />
@@ -169,37 +175,18 @@
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\CharacterHistoryModel.cs" />
+    <Compile Include="Models\Entity\GrappContext.cs" />
     <Compile Include="Models\GrappDatabase.cs" />
-    <Compile Include="Models\GrappModel.Context.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>GrappModel.Context.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\GrappModel.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>GrappModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\GrappModel.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>GrappModel.edmx</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Highscore.cs">
-      <DependentUpon>GrappModel.tt</DependentUpon>
-    </Compile>
+    <Compile Include="Models\Entity\Highscore.cs" />
     <Compile Include="Models\HighscoreParser.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
-    <Compile Include="Models\Player.cs">
-      <DependentUpon>GrappModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Skill.cs">
-      <DependentUpon>GrappModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\SkillEnum.cs">
-      <DependentUpon>GrappModel.tt</DependentUpon>
-    </Compile>
+    <Compile Include="Models\Entity\Player.cs" />
+    <Compile Include="Models\Entity\Skill.cs" />
+    <Compile Include="Models\Entity\SkillEnum.cs" />
+    <Compile Include="Models\RunescapeClient.cs" />
+    <Compile Include="Models\Skill.cs" />
+    <Compile Include="Models\Skills.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -212,23 +199,6 @@
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
-    <EntityDeploy Include="Models\GrappModel.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>GrappModel.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-    <Content Include="Models\GrappModel.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>GrappModel.edmx</DependentUpon>
-      <LastGenOutput>GrappModel.Context.cs</LastGenOutput>
-    </Content>
-    <Content Include="Models\GrappModel.edmx.diagram">
-      <DependentUpon>GrappModel.edmx</DependentUpon>
-    </Content>
-    <Content Include="Models\GrappModel.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>GrappModel.edmx</DependentUpon>
-      <LastGenOutput>GrappModel.cs</LastGenOutput>
-    </Content>
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -322,6 +292,11 @@
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>
+  <Import Project="..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" />
+  <Target Name="EnsureBclBuildImported" BeforeTargets="BeforeBuild" Condition="'$(BclBuildImported)' == ''">
+    <Error Condition="!Exists('..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" Text="This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=317567." HelpKeyword="BCLBUILD2001" />
+    <Error Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" Text="The build restored NuGet packages. Build the project again to include these packages in the build. For more information, see http://go.microsoft.com/fwlink/?LinkID=317568." HelpKeyword="BCLBUILD2002" />
+  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
