@@ -25,8 +25,12 @@ namespace Grapp
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
-                      "~/Content/site.css"));
+                      "~/Content/site.css",
+                      "~/Content/c3/c3.css"));
 
+            bundles.Add(new ScriptBundle("~/bundles/c3").Include(
+                    "~/Scripts/d3.js",
+                    "~/Scripts/c3/c3.js"));
             // Set EnableOptimizations to false for debugging. For more information,
             // visit http://go.microsoft.com/fwlink/?LinkId=301862
             BundleTable.EnableOptimizations = true;

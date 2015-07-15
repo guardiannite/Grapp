@@ -10,7 +10,8 @@ namespace Grapp.Controllers
     {
         public ActionResult Index()
         {
-            return View();
+            return RedirectToAction("Index", "CharacterHistory");
+            //return View();
         }
 
         public ActionResult About()

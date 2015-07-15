@@ -3,6 +3,9 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<h4 style="color:red">Graph coming soon...</h4>
+<div id="chart"></div>
+<br />
 <form class="form-horizontal" role="form" action="">
     <div class="form-group">
         <label for="inputPlayerName" class="col-sm-2 control-label">Search for a player:</label>
@@ -39,4 +42,39 @@
         </tr>
     }
 </table>
+
+@section Scripts{
+<script>
+    var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "June",
+  "July", "Aug", "Sept", "Oct", "Nov", "Dec"
+    ];
+
+    var chart = c3.generate({
+        bindto: '#chart',
+        data: {
+            x: 'x',
+            //xFormat: '%Y%m%d', // 'xFormat' can be used as custom format of 'x'
+            columns: [
+                ['x', '2015-01-01', '2015-01-25', '2015-03-03', '2015-04-17', '2015-05-05', '2015-06-10'],
+                //['x', '20130101', '20130102', '20130103', '20130104', '20130105', '20130106'],
+                ['Attack', 55, 58, 59, 63, 67, 71],
+                ['Strength', 60, 61, 65, 66, 66, 67],
+                ['Defence', 52, 53, 55, 64, 64, 64],
+                ['Herblore', 35, 36, 42, 51, 51, 53],
+                ['Theiving', 38, 44, 45, 45, 47, 50],
+                ['Fletching', 45, 47, 55, 58, 66, 74],
+            ]
+        },
+        axis: {
+            x: {
+                type: 'timeseries',
+                tick: {
+                    format: function (x) { return x.getDate() + " " +monthNames[x.getMonth()] + " " + x.getFullYear() }
+                }
+            }
+        }
+    });
+    </script>
+}
+
 
