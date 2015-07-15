@@ -12,6 +12,8 @@ namespace Grapp.Models
         public DateTime LastUpdate { get; set; }
         public DateTime CurrentUpdate { get; set; }
 
+        public string ErrorMessage { get; set; }
+
         public CharacterHistoryModel()
         {
             Highscores = new List<Skill>();

@@ -23,5 +23,22 @@ namespace Grapp.Models
                 SkillType = (Skills)entity.SkillEnum.OrderIndex
             };
         }
+
+        public static List<Skill> EmptyRecord()
+        {
+            var emptyRecords = new List<Skill>();
+
+            foreach(var skill in Enum.GetValues(typeof(Skills)))
+            {
+                 emptyRecords.Add(new Skill
+                {
+                    SkillType = (Skills)skill,
+                    Level = 0,
+                    HighscoreRank = 0,
+                    Experience = 0,
+                });
+            }
+            return emptyRecords;
+        }
     }
 }

@@ -67,12 +67,15 @@ namespace Grapp.Models
                 //Create a skill row for each skill
                 for(int i = 0; i < skillCount; i++)
                 {
+                    //LINQ fails when the enumIndex statement is embedded in the query, so this must be separated
+                    var enumIndex = (int)skills[i].SkillType;
+                    var skillName = context.SkillEnums.Where(s => s.OrderIndex == enumIndex).Select(se => se.Name).FirstOrDefault();
                     var skill = new SkillEntity()
                     {
                         Rank = skills[i].HighscoreRank,
                         Experience = skills[i].Experience,
                         Level = skills[i].Level,
-                        Name = context.SkillEnums.Where(s=> s.OrderIndex == (int)skills[i].SkillType).Select(se => se.Name).FirstOrDefault(),
+                        Name = skillName,
                     };
 
                     highscoreEntry.Skills.Add(skill);

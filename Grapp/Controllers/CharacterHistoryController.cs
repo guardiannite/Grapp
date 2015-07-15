@@ -26,6 +26,8 @@ namespace Grapp.Controllers
                 if(rsCurrentHighscores == null)
                 {
                     //User doesn't exist in Runescape's highscores
+                    model.ErrorMessage = "Failed to find user in Runescape's highscores";
+                    return View(model);
                 }
 
                 DateTime? date;
@@ -33,7 +35,9 @@ namespace Grapp.Controllers
 
                 if(previousHighscores == null)
                 {
-                    //No highscores currently exist for this user
+                    //No highscores were found for this user in our database
+                    previousHighscores = Skill.EmptyRecord();
+                    date = DateTime.Now;
                 }
 
                 //Date of the most recent highscore entry in our database
